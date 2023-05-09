@@ -85,7 +85,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:layout_margin="10dp">
                 <TextView
@@ -102,7 +102,7 @@
                 <TextView
                     android:id="@+id/chat"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
                     android:layout_weight="2"
                     android:textColor="@color/white"
                     android:text="동영상"
