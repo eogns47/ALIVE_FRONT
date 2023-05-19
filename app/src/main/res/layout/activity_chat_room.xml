@@ -80,12 +80,14 @@
         android:layout_height="0dp"
         >
         <ImageView
+            android:id="@+id/album"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/album"/>
         <ImageView
+            android:id="@+id/camera"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
