@@ -4,6 +4,10 @@ plugins {
 }
 
 android {
+    aaptOptions {
+        noCompress 'mp4' //압축안하도록
+    }
+
     namespace 'com.example.alive'
     compileSdk 33
 

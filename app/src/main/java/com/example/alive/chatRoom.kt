@@ -41,7 +41,7 @@ class chatRoom : AppCompatActivity() {
 
     fun setTime(){
         val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
         time = current.format(formatter)
     }
     fun initBackBtn(){
@@ -62,7 +62,7 @@ class chatRoom : AppCompatActivity() {
 
     fun initReceive() {
         binding.menu.setOnClickListener {
-            data.add(Message(0, 0, 0, "receive", "8:50"))
+            data.add(Message(0, 0, 0, "receive", time))
             adapter.submitList(data)
             adapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(data.size-1)
