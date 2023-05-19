@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SplashActivity"
+    android:orientation="horizontal"
     android:background="@color/black">
 
     <ImageView
         android:id="@+id/aliveLogo"
+        android:layout_gravity="center"
         android:layout_width="376dp"
         android:layout_height="231dp"
-        android:layout_marginTop="200dp"
+
         android:layout_weight="1"
         app:srcCompat="@drawable/aliverogo" />
 </LinearLayout>
