@@ -1,12 +1,19 @@
 package com.example.alive
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
 import com.example.alive.databinding.ActivityMainBinding
@@ -19,6 +26,7 @@ class chatRoom : AppCompatActivity() {
     var data: ArrayList<Message> = ArrayList()
     lateinit var adapter: MychatAdapter
     var time:String ="d"
+    val REQUEST_VIDEO_CAPTURE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -29,15 +37,55 @@ class chatRoom : AppCompatActivity() {
         initBackBtn()
         val layoutParams =
             binding.mainLayout.getChildAt(3).layoutParams as LinearLayout.LayoutParams
+        val recyclerView =
+            binding.mainLayout.getChildAt(1).layoutParams as LinearLayout.LayoutParams
 
         binding.plus.setOnClickListener() {
-            if (layoutParams.weight == 0f)
-                layoutParams.weight = 20f
-            else
+            if (layoutParams.weight == 0f) {
+                recyclerView.weight = 5f
+                layoutParams.weight = 5f
+            }
+            else {
                 layoutParams.weight = 0f
+                recyclerView.weight = 10f
+            }
             binding.mainLayout.getChildAt(3).layoutParams = layoutParams
+            binding.mainLayout.getChildAt(1).layoutParams = recyclerView
+        }
+
+        binding.camera.setOnClickListener {
+            requestPermission()
         }
     }
+
+    fun requestPermission() {
+        val REQUEST_CAMERA_PERMISSION = 2
+
+        // 카메라 권한이 있는지 확인
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            // 권한이 이미 있는 경우
+            // 카메라 Intent 실행 코드 작성
+            runCamera()
+        } else {
+            // 권한이 없는 경우, 권한 요청
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
+        }
+
+    }
+
+    fun runCamera() {
+        val camIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        startActivity(camIntent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val videoUri: Uri? = data?.data
+            // 동영상을 사용하는 코드 작성
+        }
+    }
+
 
     fun setTime(){
         val current = LocalDateTime.now()
