@@ -17,17 +17,20 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:src="@drawable/chevronLeft"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="5"
+            android:layout_gravity="center"
             android:text="K-GPT"
             android:textColor="@color/white"/>
         <ImageView
             android:id="@+id/menu"
             android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/menu" />
     </LinearLayout>
@@ -60,13 +63,14 @@
             android:padding="8dp"
             android:textColor="@color/white"
             android:background="@drawable/edittext_background" />
-
-
-
-
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
 
+    </LinearLayout>
 
 
 </LinearLayout>
