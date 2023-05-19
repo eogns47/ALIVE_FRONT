@@ -29,13 +29,20 @@ class chatRoom : AppCompatActivity() {
         initBackBtn()
         val layoutParams =
             binding.mainLayout.getChildAt(3).layoutParams as LinearLayout.LayoutParams
+        val recyclerView =
+            binding.mainLayout.getChildAt(1).layoutParams as LinearLayout.LayoutParams
 
         binding.plus.setOnClickListener() {
-            if (layoutParams.weight == 0f)
-                layoutParams.weight = 20f
-            else
+            if (layoutParams.weight == 0f) {
+                recyclerView.weight = 5f
+                layoutParams.weight = 5f
+            }
+            else {
                 layoutParams.weight = 0f
+                recyclerView.weight = 10f
+            }
             binding.mainLayout.getChildAt(3).layoutParams = layoutParams
+            binding.mainLayout.getChildAt(1).layoutParams = recyclerView
         }
     }
 
