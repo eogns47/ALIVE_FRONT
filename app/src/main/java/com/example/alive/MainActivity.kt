@@ -1,7 +1,9 @@
 package com.example.alive
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityMainBinding
 
@@ -14,6 +16,22 @@ class MainActivity : AppCompatActivity() {
         binding=ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.profilephoto.clipToOutline = true
+        init()
+        initchaTView()
+    }
+    val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        }
+
+    private fun init(){
+
+    }
+
+    fun initchaTView(){
+        binding.chatting.setOnClickListener {
+            val intent = Intent(this@MainActivity, chatRoom::class.java)
+            startActivity(intent)
+        }
     }
 
 
