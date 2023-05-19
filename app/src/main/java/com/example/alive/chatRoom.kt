@@ -1,22 +1,31 @@
 package com.example.alive
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
 import com.example.alive.databinding.ActivityMainBinding
+import java.util.ArrayList
 
 class chatRoom : AppCompatActivity() {
     lateinit var binding: ActivityChatRoomBinding
+    var data: ArrayList<Message> = ArrayList()
+    lateinit var adapter: MychatAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding=ActivityChatRoomBinding.inflate(layoutInflater)
+        binding = ActivityChatRoomBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val layoutParams = binding.mainLayout.getChildAt(3).layoutParams as LinearLayout.LayoutParams
+        initSend()
+        initReceive()
+        initRecyclerView()
+        initBackBtn()
+        val layoutParams =
+            binding.mainLayout.getChildAt(3).layoutParams as LinearLayout.LayoutParams
 
         binding.plus.setOnClickListener() {
             if (layoutParams.weight == 0f)
@@ -26,4 +35,40 @@ class chatRoom : AppCompatActivity() {
             binding.mainLayout.getChildAt(3).layoutParams = layoutParams
         }
     }
+
+    fun initBackBtn(){
+        binding.backBtn.setOnClickListener{
+            val intent = Intent(this@chatRoom, MainActivity::class.java)
+            startActivity(intent)
+        }
+    }
+    fun initSend() {
+        binding.sendBtn.setOnClickListener {
+            data.add(Message(1, 1, 1, "send", "8:50"))
+            adapter.submitList(data)
+            adapter.notifyDataSetChanged()
+            binding.recyclerView.scrollToPosition(data.size-1)
+        }
+    }
+
+    fun initReceive() {
+        binding.menu.setOnClickListener {
+            data.add(Message(0, 0, 0, "receive", "8:50"))
+            adapter.submitList(data)
+            adapter.notifyDataSetChanged()
+            binding.recyclerView.scrollToPosition(data.size-1)
+        }
+    }
+
+    fun initRecyclerView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.VERTICAL, false
+        )
+        adapter = MychatAdapter(data)
+
+
+        binding.recyclerView.adapter = adapter
+    }
 }
+

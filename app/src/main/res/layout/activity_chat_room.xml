@@ -7,17 +7,17 @@
     android:orientation="vertical"
     android:background="@color/black"
     tools:context=".chatRoom"
-    android:id="@+id/mainLayout"
-    >
+    android:id="@+id/mainLayout">
 
     <LinearLayout
-        android:layout_weight="1"
+        android:id="@+id/sendBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -39,12 +39,11 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_weight="18"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="631dp" />
 
     <LinearLayout
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/llbgrd"
@@ -54,7 +53,7 @@
             android:layout_gravity="center"
             android:id="@+id/plus"
             android:layout_width="30dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:srcCompat="@drawable/plus" />
 
         <EditText
@@ -71,53 +70,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/plusBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         >
-        <LinearLayout
-            android:id="@+id/albumBtn"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/albumicon"/>
-            <TextView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="앨범"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/cameraBtn"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/cameraicon"/>
-            <TextView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="카메라"/>
-        </LinearLayout>
-
 
     </LinearLayout>
 
