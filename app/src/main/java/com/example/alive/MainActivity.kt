@@ -19,9 +19,7 @@ class MainActivity : AppCompatActivity() {
         init()
         initchaTView()
     }
-    val launcher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        }
+
 
     private fun init(){
 

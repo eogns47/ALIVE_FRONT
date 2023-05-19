@@ -10,12 +10,15 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
 import com.example.alive.databinding.ActivityMainBinding
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.ArrayList
 
 class chatRoom : AppCompatActivity() {
     lateinit var binding: ActivityChatRoomBinding
     var data: ArrayList<Message> = ArrayList()
     lateinit var adapter: MychatAdapter
+    var time:String ="d"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -36,6 +39,11 @@ class chatRoom : AppCompatActivity() {
         }
     }
 
+    fun setTime(){
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        time = current.format(formatter)
+    }
     fun initBackBtn(){
         binding.backBtn.setOnClickListener{
             val intent = Intent(this@chatRoom, MainActivity::class.java)
@@ -44,7 +52,8 @@ class chatRoom : AppCompatActivity() {
     }
     fun initSend() {
         binding.sendBtn.setOnClickListener {
-            data.add(Message(1, 1, 1, "send", "8:50"))
+            setTime()
+            data.add(Message(1, 1, 1, "send", time))
             adapter.submitList(data)
             adapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(data.size-1)
