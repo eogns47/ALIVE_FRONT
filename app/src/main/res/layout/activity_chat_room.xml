@@ -6,9 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/black"
-    tools:context=".chatRoom">
+    tools:context=".chatRoom"
+    android:id="@+id/mainLayout"
+    >
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -18,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/chevronLeft"/>
+            android:src="@drawable/chevronleft"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -36,10 +39,12 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_weight="18"
         android:layout_width="match_parent"
-        android:layout_height="631dp" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/llbgrd"
@@ -49,7 +54,7 @@
             android:layout_gravity="center"
             android:id="@+id/plus"
             android:layout_width="30dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:srcCompat="@drawable/plus" />
 
         <EditText
@@ -66,9 +71,53 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/plusBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="0"
         >
+        <LinearLayout
+            android:id="@+id/albumBtn"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/albumicon"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="앨범"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/cameraBtn"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cameraicon"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="카메라"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 
