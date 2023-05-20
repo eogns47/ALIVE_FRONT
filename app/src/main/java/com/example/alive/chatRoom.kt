@@ -3,17 +3,15 @@ package com.example.alive
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
+import android.media.MediaPlayer.OnPreparedListener
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
 import java.time.LocalDateTime
@@ -82,10 +80,11 @@ class chatRoom : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val videoUri = data?.data
+        val videoUri2 = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
 
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                initSendVideo(videoUri)
+                initSendVideo(videoUri2)
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Video recording cancelled.",
                     Toast.LENGTH_LONG).show()
@@ -96,15 +95,6 @@ class chatRoom : AppCompatActivity() {
         }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        val videoUri: Uri? = data?.data
-//
-//
-//        // 동영상을 사용하는 코드 작성
-//        initSendVideo(videoUri)
-//
-//    }
 
 
     fun setTime(){
@@ -147,7 +137,6 @@ class chatRoom : AppCompatActivity() {
         adapter.submitList(data)
         adapter.notifyDataSetChanged()
         binding.recyclerView.scrollToPosition(data.size-1)
-
     }
     fun initReceiveVideo(videouri:Uri?) {
 

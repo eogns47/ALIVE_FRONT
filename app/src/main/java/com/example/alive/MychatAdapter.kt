@@ -1,5 +1,6 @@
 package com.example.alive
 
+import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +10,7 @@ import com.example.alive.databinding.MyChatItemBinding
 import com.example.alive.databinding.MyVideoChatItemBinding
 import com.example.alive.databinding.OtherChatItemBinding
 import com.example.alive.databinding.OtherVideoChatItemBinding
+import kotlinx.coroutines.NonCancellable.start
 
 
 class MychatAdapter(
@@ -43,6 +45,9 @@ class MychatAdapter(
         fun bind(message: Message){
             binding.chatVideoView.setVideoURI(message.uri)
             binding.chatVideoView.start()
+            binding.chatVideoView.setOnPreparedListener(MediaPlayer.OnPreparedListener { //비디오 시작
+                binding.chatVideoView.start()
+            })
             binding.timeTextView.text = message.time
         }
     }
