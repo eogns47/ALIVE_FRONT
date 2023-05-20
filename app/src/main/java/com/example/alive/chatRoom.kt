@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
 import com.example.alive.databinding.ActivityMainBinding
+import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.ArrayList
@@ -80,10 +81,11 @@ class chatRoom : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == Activity.RESULT_OK) {
-            val videoUri: Uri? = data?.data
-            // 동영상을 사용하는 코드 작성
-        }
+        val videoUri: Uri? = data?.data
+
+        // 동영상을 사용하는 코드 작성
+        initSendVideo(videoUri)
+
     }
 
 
@@ -101,20 +103,40 @@ class chatRoom : AppCompatActivity() {
     fun initSend() {
         binding.sendBtn.setOnClickListener {
             setTime()
-            data.add(Message(1, 1, 1, "send", time))
+            data.add(Message(1, 1, 1, "send", time,null))
             adapter.submitList(data)
             adapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(data.size-1)
         }
     }
 
+
     fun initReceive() {
         binding.menu.setOnClickListener {
-            data.add(Message(0, 0, 0, "receive", time))
+            data.add(Message(0, 0, 0, "receive", time,null))
             adapter.submitList(data)
             adapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(data.size-1)
         }
+    }
+
+    fun initSendVideo(videouri:Uri?) {
+        if(videouri==null){
+            Toast.makeText(applicationContext, "동영상 재생 준비 완료", Toast.LENGTH_SHORT).show()
+        }
+        data.add(Message(2,2,2, "d", time,videouri))
+        adapter.submitList(data)
+        adapter.notifyDataSetChanged()
+        binding.recyclerView.scrollToPosition(data.size-1)
+
+    }
+    fun initReceiveVideo(videouri:Uri?) {
+
+        data.add(Message(0, 0, 0, "receive", time,videouri))
+        adapter.submitList(data)
+        adapter.notifyDataSetChanged()
+        binding.recyclerView.scrollToPosition(data.size-1)
+
     }
 
     fun initRecyclerView() {

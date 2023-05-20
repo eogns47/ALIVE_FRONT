@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.alive.databinding.MyChatItemBinding
+import com.example.alive.databinding.MyVideoChatItemBinding
 import com.example.alive.databinding.OtherChatItemBinding
+import com.example.alive.databinding.OtherVideoChatItemBinding
 
 
 class MychatAdapter(
@@ -37,13 +39,37 @@ class MychatAdapter(
         }
     }
 
+    inner class MyVideoViewHolder(val binding: MyVideoChatItemBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(message: Message){
+            binding.chatVideoView.setVideoURI(message.uri)
+            binding.timeTextView.text = message.time
+        }
+    }
+
+    inner class OtherVideoViewHolder(val binding: OtherVideoChatItemBinding) : RecyclerView.ViewHolder(binding.root){
+        fun bind(message: Message){
+            binding.chatVideoView.setVideoURI(message.uri)
+            binding.timeTextView.text = message.time
+            binding.profileImageView.setImageResource(R.drawable.circuit)
+            binding.nameTextView.text = "ALIVE"
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             1->{
                 MyViewHolder(MyChatItemBinding.inflate(LayoutInflater.from(parent.context),parent, false))
-            }else->{
+            }
+            0->{
                 OtherViewHolder(OtherChatItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
             }
+            2->{
+                MyVideoViewHolder(MyVideoChatItemBinding.inflate(LayoutInflater.from(parent.context),parent, false))
+            }
+            else->{
+                OtherVideoViewHolder(OtherVideoChatItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+            }
+
         }
     }
 
@@ -52,10 +78,15 @@ class MychatAdapter(
             1->{  //사용자
                 (holder as MyViewHolder).bind(currentList[position])
                 holder.setIsRecyclable(false)
-            }else->{   //ai
+            }0->{   //ai
             (holder as OtherViewHolder).bind(currentList[position])
-            holder.setIsRecyclable(false)
-        }
+            holder.setIsRecyclable(false) }
+            2->{   //ai
+                (holder as MyVideoViewHolder).bind(currentList[position])
+                holder.setIsRecyclable(false) }
+            else->{   //ai
+                (holder as OtherVideoViewHolder).bind(currentList[position])
+                holder.setIsRecyclable(false) }
         }
     }
 
