@@ -42,6 +42,7 @@ class MychatAdapter(
     inner class MyVideoViewHolder(val binding: MyVideoChatItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(message: Message){
             binding.chatVideoView.setVideoURI(message.uri)
+            binding.chatVideoView.start()
             binding.timeTextView.text = message.time
         }
     }
