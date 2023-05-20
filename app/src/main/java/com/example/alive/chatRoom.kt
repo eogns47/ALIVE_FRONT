@@ -1,33 +1,31 @@
 package com.example.alive
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
-import com.example.alive.databinding.ActivityMainBinding
-import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.ArrayList
+
 
 class chatRoom : AppCompatActivity() {
     lateinit var binding: ActivityChatRoomBinding
     var data: ArrayList<Message> = ArrayList()
     lateinit var adapter: MychatAdapter
     var time:String ="d"
-    val REQUEST_VIDEO_CAPTURE = 1
+    private val VIDEO_CAPTURE = 101
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -75,18 +73,38 @@ class chatRoom : AppCompatActivity() {
     }
 
     fun runCamera() {
-        val camIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-        startActivity(camIntent)
+        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        startActivityForResult(intent, VIDEO_CAPTURE)
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val videoUri: Uri? = data?.data
+        val videoUri = data?.data
 
-        // 동영상을 사용하는 코드 작성
-        initSendVideo(videoUri)
-
+        if (requestCode == VIDEO_CAPTURE) {
+            if (resultCode == Activity.RESULT_OK) {
+                initSendVideo(videoUri)
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(this, "Video recording cancelled.",
+                    Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Failed to record video",
+                    Toast.LENGTH_LONG).show()
+            }
+        }
     }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        val videoUri: Uri? = data?.data
+//
+//
+//        // 동영상을 사용하는 코드 작성
+//        initSendVideo(videoUri)
+//
+//    }
 
 
     fun setTime(){
@@ -124,6 +142,7 @@ class chatRoom : AppCompatActivity() {
         if(videouri==null){
             Toast.makeText(applicationContext, "동영상 재생 준비 완료", Toast.LENGTH_SHORT).show()
         }
+        setTime()
         data.add(Message(2,2,2, "d", time,videouri))
         adapter.submitList(data)
         adapter.notifyDataSetChanged()
