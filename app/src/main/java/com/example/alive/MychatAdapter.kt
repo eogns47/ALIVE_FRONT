@@ -56,7 +56,7 @@ class MychatAdapter(
             binding.chatVideoView.setVideoURI(message.videopath)
             binding.timeTextView.text = message.time
             binding.profileImageView.setImageResource(R.drawable.circuit)
-            binding.nameTextView.text = "ALIVE"
+            binding.chatVideoView.start()
         }
     }
 
