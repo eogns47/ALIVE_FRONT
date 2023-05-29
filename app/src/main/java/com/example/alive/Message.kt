@@ -9,5 +9,5 @@ data class Message(
     var receiver_uid: Int,
     var text: String,
     var time: String,
-    var uri: Uri?
+    var videopath:Uri?
 )

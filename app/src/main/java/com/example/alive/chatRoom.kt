@@ -3,27 +3,51 @@ package com.example.alive
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.MediaPlayer.OnPreparedListener
+import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
+@Suppress("DEPRECATION")
 class chatRoom : AppCompatActivity() {
     lateinit var binding: ActivityChatRoomBinding
     var data: ArrayList<Message> = ArrayList()
     lateinit var adapter: MychatAdapter
+    var videoFile:File?=null
+    var filename:String?=null
+    private var videoUri:Uri?=null
+    var getFile:String?=null
     var time:String ="d"
+    var REQUEST_VIDEO_CAPTURE = 1;
     private val VIDEO_CAPTURE = 101
+    private val CAMERA_PERMISSION = arrayOf(android.Manifest.permission.CAMERA)
+    private val CAMERA_PERMISSION_FLAG = 100
+    private val STORAGE_PERMISSION = arrayOf(
+        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private val STORAGE_PERMISSION_FLAG = 200
+    private lateinit var videoCaptureLauncher: ActivityResultLauncher<Intent>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -32,6 +56,9 @@ class chatRoom : AppCompatActivity() {
         initReceive()
         initRecyclerView()
         initBackBtn()
+        if(checkPermission(CAMERA_PERMISSION, CAMERA_PERMISSION_FLAG)){
+            checkPermission(STORAGE_PERMISSION, STORAGE_PERMISSION_FLAG)
+        }
         val layoutParams =
             binding.mainLayout.getChildAt(3).layoutParams as LinearLayout.LayoutParams
         val recyclerView =
@@ -53,10 +80,33 @@ class chatRoom : AppCompatActivity() {
         binding.camera.setOnClickListener {
             requestPermission()
         }
+        videoCaptureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // 결과 처리
+                val videoUri = result.data?.data
+                // 동영상 처리 로직 호출 등
+            }
+        }
+    }
+
+    private fun checkPermission(permissions : Array<out String>, flag : Int):Boolean{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for (permission in permissions) {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        permission
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(this, permissions, flag)
+                    return false
+                }
+            }
+        }
+        return true
     }
 
     fun requestPermission() {
-        val REQUEST_CAMERA_PERMISSION = 2
+        val REQUEST_CAMERA_PERMISSION = 1
 
         // 카메라 권한이 있는지 확인
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -70,30 +120,91 @@ class chatRoom : AppCompatActivity() {
 
     }
 
+
     fun runCamera() {
-        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-        startActivityForResult(intent, VIDEO_CAPTURE)
+        val recordVideoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        filename=newVideoFileName()
+        videoFile = File(
+            File("${filesDir}/video1").apply {
+                if(!this.exists()){
+                    Toast.makeText(this@chatRoom,"i'll make file",Toast.LENGTH_SHORT).show()
+                    this.mkdirs()
+                }
+                else{
+                    Toast.makeText(this@chatRoom,"file exist",Toast.LENGTH_SHORT).show()
+                }
+            },
+            filename
+        )
+        //Toast.makeText(this,"h2",Toast.LENGTH_SHORT).show()
+
+
+        getFile = videoFile!!.path
+        //Toast.makeText(this,videoUri.toString(),Toast.LENGTH_SHORT).show()
+        //recordVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT,videoUri)
+        startActivityForResult(recordVideoIntent, REQUEST_VIDEO_CAPTURE)
     }
-
-
-
+    private fun newVideoFileName() : String {
+        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss")
+        var filename2 = sdf.format(System.currentTimeMillis())
+        return "wpqkf${filename2}.mp4"
+    }
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val videoUri = data?.data
-        val videoUri2 = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")
 
-        if (requestCode == VIDEO_CAPTURE) {
-            if (resultCode == Activity.RESULT_OK) {
-                initSendVideo(videoUri2)
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Toast.makeText(this, "Video recording cancelled.",
-                    Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(this, "Failed to record video",
-                    Toast.LENGTH_LONG).show()
+        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK){
+            when (requestCode) {
+                REQUEST_VIDEO_CAPTURE -> {
+                    data?.data?.let { videoUri ->
+                        saveVideoFile(videoUri)
+                        if (videoFile != null) {
+                            val videoUri: Uri = Uri.fromFile(videoFile)
+                            Toast.makeText(this,videoUri.toString(),Toast.LENGTH_SHORT).show()
+                            initSendVideo(videoUri)
+                        } else {
+                            // 동영상 파일 저장 실패
+                            // 에러 처리
+                        }
+                    }
+
+                    val videoPath = getFile
+
+                }
             }
         }
+        else{
+            Toast.makeText(this,"sibal",Toast.LENGTH_SHORT).show()
+        }
     }
+
+    private fun saveVideoFile(videoUri: Uri): File? {
+        val videoFile: File?
+        val videoFilePath = "${filesDir}/video1/${filename}"
+        try {
+            val inputStream = contentResolver.openInputStream(videoUri)
+            val outputStream = FileOutputStream(videoFilePath)
+            inputStream?.use { input ->
+                outputStream.use { output ->
+                    val buffer = ByteArray(4 * 1024) // 4KB buffer
+                    var bytesRead: Int
+                    while (input.read(buffer).also { bytesRead = it } != -1) {
+                        output.write(buffer, 0, bytesRead)
+                    }
+                    output.flush()
+                }
+            }
+            videoFile = File(videoFilePath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        }
+        return videoFile
+    }
+
+
+
+
 
 
 
@@ -158,4 +269,3 @@ class chatRoom : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
     }
 }
-
