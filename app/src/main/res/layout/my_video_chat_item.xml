@@ -4,18 +4,28 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp">
-        <VideoView
-            android:id="@+id/chatVideoView"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
 
-            android:padding="10dp"/>
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="350dp"
+            android:layout_height="350dp"
+            android:background="@drawable/my_chat_bubble"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <VideoView
+                android:id="@+id/chatVideoView"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/timeTextView"
@@ -24,10 +34,10 @@
             android:text="오후 11:50"
             android:textSize="12sp"
             android:textColor="@color/gray"
-            app:layout_constraintEnd_toStartOf="@id/chatVideoView"
-            app:layout_constraintBottom_toBottomOf="@id/chatVideoView"
+            app:layout_constraintEnd_toStartOf="@id/relativeLayout"
+            app:layout_constraintBottom_toBottomOf="@id/relativeLayout"
             android:layout_marginEnd="5dp"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 

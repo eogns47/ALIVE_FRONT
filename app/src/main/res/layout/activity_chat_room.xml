@@ -23,7 +23,7 @@
             android:layout_gravity="center"
             android:src="@drawable/chevronleft"/>
         <TextView
-            android:id="@+id/sendBtn"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -56,14 +56,16 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/plus"
-            android:layout_width="30dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             app:srcCompat="@drawable/plus" />
 
         <EditText
+            android:layout_weight="7"
             android:layout_gravity="center"
             android:id="@+id/editText"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint=""
             android:inputType="text"
@@ -71,6 +73,12 @@
             android:padding="8dp"
             android:textColor="@color/white"
             android:background="@drawable/edittext_background" />
+        <ImageView
+            android:id="@+id/sendBtn"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/aa"/>
     </LinearLayout>
 
     <LinearLayout

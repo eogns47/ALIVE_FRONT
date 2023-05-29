@@ -40,7 +40,6 @@ class chatRoom : AppCompatActivity() {
     var getFile:String?=null
     var time:String ="d"
     var REQUEST_VIDEO_CAPTURE = 1;
-    private val VIDEO_CAPTURE = 101
     private val CAMERA_PERMISSION = arrayOf(android.Manifest.permission.CAMERA)
     private val CAMERA_PERMISSION_FLAG = 100
     private val STORAGE_PERMISSION = arrayOf(
@@ -78,6 +77,10 @@ class chatRoom : AppCompatActivity() {
         }
 
         binding.camera.setOnClickListener {
+            layoutParams.weight = 0f
+            recyclerView.weight = 10f
+            binding.mainLayout.getChildAt(3).layoutParams = layoutParams
+            binding.mainLayout.getChildAt(1).layoutParams = recyclerView
             requestPermission()
         }
         videoCaptureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -147,7 +150,7 @@ class chatRoom : AppCompatActivity() {
     private fun newVideoFileName() : String {
         val sdf = SimpleDateFormat("yyyyMMdd_HHmmss")
         var filename2 = sdf.format(System.currentTimeMillis())
-        return "wpqkf${filename2}.mp4"
+        return "${filename2}.mp4"
     }
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -160,7 +163,6 @@ class chatRoom : AppCompatActivity() {
                         saveVideoFile(videoUri)
                         if (videoFile != null) {
                             val videoUri: Uri = Uri.fromFile(videoFile)
-                            Toast.makeText(this,videoUri.toString(),Toast.LENGTH_SHORT).show()
                             initSendVideo(videoUri)
                         } else {
                             // 동영상 파일 저장 실패
@@ -222,7 +224,9 @@ class chatRoom : AppCompatActivity() {
     fun initSend() {
         binding.sendBtn.setOnClickListener {
             setTime()
-            data.add(Message(1, 1, 1, "send", time,null))
+            var text=binding.editText.text.toString()
+            data.add(Message(1, 1, 1, text, time,null))
+            binding.editText.text=null
             adapter.submitList(data)
             adapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(data.size-1)
