@@ -1,8 +1,10 @@
 package com.example.alive
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -20,9 +22,20 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import com.example.alive.retrofit.RetrofitClient
+import com.example.alive.retrofit.UploadRes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -160,8 +173,10 @@ class chatRoom : AppCompatActivity() {
                         saveVideoFile(videoUri)
                         if (videoFile != null) {
                             val videoUri: Uri = Uri.fromFile(videoFile)
-                            Toast.makeText(this,videoUri.toString(),Toast.LENGTH_SHORT).show()
                             initSendVideo(videoUri)
+
+                            postVideo(videoUri)
+                            getVideo()
                         } else {
                             // 동영상 파일 저장 실패
                             // 에러 처리
@@ -177,6 +192,75 @@ class chatRoom : AppCompatActivity() {
             Toast.makeText(this,"sibal",Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun postVideo(uri: Uri) {
+        val path = uri.path
+        val file = File(path) // 임시 파일을 생성합니다.
+
+        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val videoPart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+        val userService = RetrofitClient.userService
+        val call = userService.uploadFile(videoPart)
+
+        call.enqueue(object : Callback<UploadRes> {
+            override fun onResponse(call: Call<UploadRes>, response: Response<UploadRes>) {
+                // 파일 업로드 성공
+                Toast.makeText(this@chatRoom, "success - " + response.body()?.result, Toast.LENGTH_LONG).show()
+            }
+
+            override fun onFailure(call: Call<UploadRes>, t: Throwable) {
+                // 파일 업로드 실패
+                Toast.makeText(this@chatRoom, "fail - " + t.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    private fun getVideo() {
+        val userService = RetrofitClient.userService
+        val call = userService.downloadFile()
+
+            call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                // 파일 업로드 성공
+
+                val responseBody = response.body()
+                var myUri: Uri? = null
+                if (responseBody != null) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        myUri = saveVideoToFile(responseBody, "test1")
+                        withContext(Dispatchers.Main) {
+                            initReceiveVideo(myUri)
+                        }
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                // 파일 업로드 실패
+                Toast.makeText(this@chatRoom, "fail - " + t.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun saveVideoToFile(responseBody: ResponseBody, videoName: String):Uri {
+        val file = File(this.filesDir, videoName) // 저장할 파일 경로와 이름
+        val inputStream: InputStream = responseBody.byteStream()
+        val outputStream: OutputStream = FileOutputStream(file)
+
+        val buffer = ByteArray(4096)
+        var bytesRead: Int
+        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+            outputStream.write(buffer, 0, bytesRead)
+        }
+        outputStream.flush()
+        outputStream.close()
+        inputStream.close()
+
+        return Uri.fromFile(file)
+    }
+
 
     private fun saveVideoFile(videoUri: Uri): File? {
         val videoFile: File?
@@ -251,7 +335,7 @@ class chatRoom : AppCompatActivity() {
     }
     fun initReceiveVideo(videouri:Uri?) {
 
-        data.add(Message(0, 0, 0, "receive", time,videouri))
+        data.add(Message(3, 3, 3, "receive", time,videouri))
         adapter.submitList(data)
         adapter.notifyDataSetChanged()
         binding.recyclerView.scrollToPosition(data.size-1)
