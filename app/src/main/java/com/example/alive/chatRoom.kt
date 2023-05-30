@@ -143,11 +143,9 @@ class chatRoom : AppCompatActivity() {
         videoFile = File(
             File("${filesDir}/video1").apply {
                 if(!this.exists()){
-                    Toast.makeText(this@chatRoom,"i'll make file",Toast.LENGTH_SHORT).show()
                     this.mkdirs()
                 }
                 else{
-                    Toast.makeText(this@chatRoom,"file exist",Toast.LENGTH_SHORT).show()
                 }
             },
             filename
@@ -209,7 +207,7 @@ class chatRoom : AppCompatActivity() {
         call.enqueue(object : Callback<UploadRes> {
             override fun onResponse(call: Call<UploadRes>, response: Response<UploadRes>) {
                 // 파일 업로드 성공
-                Toast.makeText(this@chatRoom, "success - " + response.body()?.result, Toast.LENGTH_LONG).show()
+
             }
 
             override fun onFailure(call: Call<UploadRes>, t: Throwable) {

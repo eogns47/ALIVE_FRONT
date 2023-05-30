@@ -20,10 +20,12 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".chatRoom"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".SplashActivity"
             android:exported="true">
