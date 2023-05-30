@@ -8,14 +8,21 @@
     android:background="@color/black"
     tools:context=".chatRoom"
     android:id="@+id/mainLayout">
-
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"
         android:padding="10dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
         <ImageView
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
@@ -23,7 +30,7 @@
             android:layout_gravity="center"
             android:src="@drawable/chevronleft"/>
         <TextView
-            android:id="@+id/sendBtn"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -38,6 +45,7 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/menu" />
     </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -46,32 +54,54 @@
         android:layout_weight="10"
          />
 
-    <LinearLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/llbgrd"
-        android:orientation="horizontal">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
 
-        <ImageView
-            android:layout_gravity="center"
-            android:id="@+id/plus"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/plus" />
-
-        <EditText
-            android:layout_gravity="center"
-            android:id="@+id/editText"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint=""
-            android:inputType="text"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:textColor="@color/white"
-            android:background="@drawable/edittext_background" />
-    </LinearLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/llbgrd"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:id="@+id/plus"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/plus" />
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="7"
+                android:background="@drawable/edittext_background"
+                android:hint=""
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="8dp"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/sendBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/aa" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_weight="0"

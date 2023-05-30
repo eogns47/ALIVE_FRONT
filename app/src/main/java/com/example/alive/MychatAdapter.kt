@@ -1,6 +1,8 @@
 package com.example.alive
 
 import android.media.MediaPlayer
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -43,21 +45,18 @@ class MychatAdapter(
 
     inner class MyVideoViewHolder(val binding: MyVideoChatItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(message: Message){
-            binding.chatVideoView.setVideoURI(message.uri)
+            binding.chatVideoView.setVideoURI(message.videopath)
             binding.chatVideoView.start()
-            binding.chatVideoView.setOnPreparedListener(MediaPlayer.OnPreparedListener { //비디오 시작
-                binding.chatVideoView.start()
-            })
             binding.timeTextView.text = message.time
         }
     }
 
     inner class OtherVideoViewHolder(val binding: OtherVideoChatItemBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(message: Message){
-            binding.chatVideoView.setVideoURI(message.uri)
+            binding.chatVideoView.setVideoURI(message.videopath)
             binding.timeTextView.text = message.time
             binding.profileImageView.setImageResource(R.drawable.circuit)
-            binding.nameTextView.text = "ALIVE"
+            binding.chatVideoView.start()
         }
     }
 
