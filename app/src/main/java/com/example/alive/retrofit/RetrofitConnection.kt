@@ -1,3 +1,4 @@
+
 package com.example.alive.retrofit
 
 import okhttp3.MultipartBody
@@ -20,3 +21,4 @@ interface UserService {
         @Part file: MultipartBody.Part
     ): Call<UploadRes>
 }
+

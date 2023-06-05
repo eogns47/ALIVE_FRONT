@@ -1,3 +1,4 @@
+
 package com.example.alive.retrofit
 
 import com.google.gson.Gson
@@ -26,3 +27,4 @@ object RetrofitClient {
         retrofit.create(UserService::class.java)
     }
 }
+

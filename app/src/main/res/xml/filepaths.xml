@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <files-path name="my_internal_video" path="video1" />" />
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path name="my_internal_video" path="video1" />" />
+>>>>>>> 0659d87e46da6669d7bc7f40662185df217d1bc7
 </paths>
