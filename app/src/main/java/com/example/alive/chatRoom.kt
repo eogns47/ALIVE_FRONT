@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MotionEvent
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -103,7 +104,22 @@ class chatRoom : AppCompatActivity() {
                 // 동영상 처리 로직 호출 등
             }
         }
+
+        binding.editText.setOnTouchListener { view, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // EditText를 터치했을 때 수행할 동작을 작성합니다.
+                    layoutParams.weight = 0f
+                    recyclerView.weight = 10f
+                    binding.mainLayout.getChildAt(3).layoutParams = layoutParams
+                    binding.mainLayout.getChildAt(1).layoutParams = recyclerView
+                }
+            }
+            false
+        }
     }
+
+
 
     private fun checkPermission(permissions : Array<out String>, flag : Int):Boolean{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -306,13 +322,18 @@ class chatRoom : AppCompatActivity() {
     }
     fun initSend() {
         binding.sendBtn.setOnClickListener {
-            setTime()
-            var text=binding.editText.text.toString()
-            data.add(Message(1, 1, 1, text, time,null))
-            binding.editText.text=null
-            adapter.submitList(data)
-            adapter.notifyDataSetChanged()
-            binding.recyclerView.scrollToPosition(data.size-1)
+            if(binding.editText.text.isNullOrBlank()){
+                Toast.makeText(this,"메시지를 입력해주세요.",Toast.LENGTH_SHORT).show()
+            }
+            else {
+                setTime()
+                var text = binding.editText.text.toString()
+                data.add(Message(1, 1, 1, text, time, null))
+                binding.editText.text = null
+                adapter.submitList(data)
+                adapter.notifyDataSetChanged()
+                binding.recyclerView.scrollToPosition(data.size - 1)
+            }
         }
     }
 
