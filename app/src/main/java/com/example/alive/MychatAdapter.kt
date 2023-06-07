@@ -1,6 +1,6 @@
 package com.example.alive
 
-import android.content.Context
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +19,8 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class MychatAdapter(
-    val items:ArrayList<Message>
+    val items:ArrayList<Message>,
+    val chatRoom: Activity
 ): ListAdapter<Message, RecyclerView.ViewHolder>(diffUtil) {
 
     interface OnItemClickListener{
@@ -27,8 +28,6 @@ class MychatAdapter(
     }
 
     var itemClickListener: OnItemClickListener?=null
-
-    lateinit var context:Context
 
 
     override fun getItemViewType(position: Int): Int {
@@ -60,7 +59,7 @@ class MychatAdapter(
     inner class MyVideoViewHolder(val binding: MyVideoChatItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(message: Message){
             binding.chatVideoView.setVideoURI(message.videopath)
-            binding.chatVideoView.start()
+//            binding.chatVideoView.start()
             binding.timeTextView.text = message.time
 //            binding.chatVideoView.seekTo(message.videoPosition)
 //
@@ -72,13 +71,12 @@ class MychatAdapter(
         }
         init {
             binding.chatVideoView.setOnClickListener {
-                //binding.chatVideoView.resume()
-
-                var mediaController: MediaController
-                var isFullScreen = false
-                mediaController = MediaController(context)
-                mediaController.setAnchorView(binding.chatVideoView)
-
+//                binding.chatVideoView.resume()
+//                binding.chatVideoView.setMediaController(MediaController(chatRoom))
+//                val layoutParams = binding.chatVideoView.layoutParams
+//                layoutParams.width = 600
+//                layoutParams.height=600
+//                binding.chatVideoView.layoutParams = layoutParams
 
 
                 itemClickListener?.OnItemClick(items[adapterPosition], adapterPosition)
@@ -114,7 +112,6 @@ class MychatAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        context = parent.context
         return when(viewType){
             1->{
                 MyViewHolder(MyChatItemBinding.inflate(LayoutInflater.from(parent.context),parent, false))
