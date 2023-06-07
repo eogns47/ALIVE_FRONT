@@ -68,6 +68,7 @@ class chatRoom : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         initSend()
         initReceive()
         initRecyclerView()
@@ -381,10 +382,15 @@ class chatRoom : AppCompatActivity() {
             this,
             LinearLayoutManager.VERTICAL, false
         )
-        adapter = MychatAdapter(data)
+        adapter = MychatAdapter(data,this)
         adapter.itemClickListener = object : MychatAdapter.OnItemClickListener {
             override fun OnItemClick(data: Message, position: Int) {
                 Toast.makeText(this@chatRoom,data.videopath.toString(),Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@chatRoom, VideoActivity::class.java)
+
+                intent.putExtra("myVideoPath", data.videopath.toString())
+
+                startActivity(intent)
                 adapter.notifyItemChanged(position)
             }
         }

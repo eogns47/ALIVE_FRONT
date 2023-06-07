@@ -1,9 +1,11 @@
 package com.example.alive
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.MediaController
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,7 +17,8 @@ import com.example.alive.databinding.OtherVideoChatItemBinding
 
 
 class MychatAdapter(
-    val items:ArrayList<Message>
+    val items:ArrayList<Message>,
+    val chatRoom: Activity
 ): ListAdapter<Message, RecyclerView.ViewHolder>(diffUtil) {
 
     interface OnItemClickListener{
@@ -55,7 +58,7 @@ class MychatAdapter(
     inner class MyVideoViewHolder(val binding: MyVideoChatItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(message: Message){
             binding.chatVideoView.setVideoURI(message.videopath)
-            binding.chatVideoView.start()
+//            binding.chatVideoView.start()
             binding.timeTextView.text = message.time
 //            binding.chatVideoView.seekTo(message.videoPosition)
 //
@@ -67,7 +70,14 @@ class MychatAdapter(
         }
         init {
             binding.chatVideoView.setOnClickListener {
-                binding.chatVideoView.resume()
+//                binding.chatVideoView.resume()
+//                binding.chatVideoView.setMediaController(MediaController(chatRoom))
+//                val layoutParams = binding.chatVideoView.layoutParams
+//                layoutParams.width = 600
+//                layoutParams.height=600
+//                binding.chatVideoView.layoutParams = layoutParams
+
+
                 itemClickListener?.OnItemClick(items[adapterPosition], adapterPosition)
             }
 
