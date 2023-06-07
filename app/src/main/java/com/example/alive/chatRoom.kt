@@ -63,6 +63,7 @@ class chatRoom : AppCompatActivity() {
     private val STORAGE_PERMISSION_FLAG = 200
     private lateinit var videoCaptureLauncher: ActivityResultLauncher<Intent>
     val latch = CountDownLatch(1)
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatRoomBinding.inflate(layoutInflater)
@@ -196,7 +197,7 @@ class chatRoom : AppCompatActivity() {
 
                             postVideo(videoUri)
                             try {
-                                latch.await()
+                                //latch.await()
                                 getVideo()
                             } catch (e: InterruptedException) {
                                 // 대기 도중 인터럽트가 발생한 경우 예외 처리
@@ -349,7 +350,7 @@ class chatRoom : AppCompatActivity() {
 
     fun initReceive() {
         binding.menu.setOnClickListener {
-            data.add(Message(0, 0, 0, "receive", time,null))
+            data.add(Message(0, 0, 0, "receive", time,null,false))
             adapter.submitList(data)
             adapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(data.size-1)
@@ -381,6 +382,13 @@ class chatRoom : AppCompatActivity() {
             LinearLayoutManager.VERTICAL, false
         )
         adapter = MychatAdapter(data)
+        adapter.itemClickListener = object : MychatAdapter.OnItemClickListener {
+            override fun OnItemClick(data: Message, position: Int) {
+                Toast.makeText(this@chatRoom,data.videopath.toString(),Toast.LENGTH_SHORT).show()
+                adapter.notifyItemChanged(position)
+            }
+        }
+
 
 
         binding.recyclerView.adapter = adapter

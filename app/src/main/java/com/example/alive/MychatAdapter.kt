@@ -3,6 +3,8 @@ package com.example.alive
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +18,13 @@ class MychatAdapter(
     val items:ArrayList<Message>
 ): ListAdapter<Message, RecyclerView.ViewHolder>(diffUtil) {
 
-    interface RecyclerViewClickListener {
-        fun onClick(view: View?, position: Int)
+    interface OnItemClickListener{
+        fun OnItemClick(data:Message,position: Int)
     }
+
+    var itemClickListener: OnItemClickListener?=null
+
+
 
     override fun getItemViewType(position: Int): Int {
         return currentList[position].sender_uid
@@ -44,12 +50,40 @@ class MychatAdapter(
         }
     }
 
+
+
     inner class MyVideoViewHolder(val binding: MyVideoChatItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(message: Message){
             binding.chatVideoView.setVideoURI(message.videopath)
             binding.chatVideoView.start()
             binding.timeTextView.text = message.time
+//            binding.chatVideoView.seekTo(message.videoPosition)
+//
+//            if (!message.isVideoPlaying) {
+//                binding.chatVideoView.start()
+//            } else {
+//                binding.chatVideoView.pause()
+//            }
         }
+        init {
+            binding.chatVideoView.setOnClickListener {
+                binding.chatVideoView.resume()
+                itemClickListener?.OnItemClick(items[adapterPosition], adapterPosition)
+            }
+
+        }
+
+    }
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is MyVideoViewHolder) {
+            val position = holder.position
+            if (position != RecyclerView.NO_POSITION) {
+                val message = currentList[position]
+                message.isVideoPlaying = holder.binding.chatVideoView.isPlaying
+                message.videoPosition = holder.binding.chatVideoView.currentPosition
+            }
+        }
+        super.onViewRecycled(holder)
     }
 
     inner class OtherVideoViewHolder(val binding: OtherVideoChatItemBinding) : RecyclerView.ViewHolder(binding.root){
@@ -60,14 +94,9 @@ class MychatAdapter(
             binding.chatVideoView.start()
         }
 
-        init {
-            binding.chatVideoView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    binding.chatVideoView.resume()
-                }
-            }
-        }
+
+
+
 
     }
 
