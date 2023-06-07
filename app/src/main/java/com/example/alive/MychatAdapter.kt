@@ -1,9 +1,12 @@
 package com.example.alive
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.AdapterView
+import android.widget.MediaController
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,6 +15,7 @@ import com.example.alive.databinding.MyChatItemBinding
 import com.example.alive.databinding.MyVideoChatItemBinding
 import com.example.alive.databinding.OtherChatItemBinding
 import com.example.alive.databinding.OtherVideoChatItemBinding
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class MychatAdapter(
@@ -24,6 +28,7 @@ class MychatAdapter(
 
     var itemClickListener: OnItemClickListener?=null
 
+    lateinit var context:Context
 
 
     override fun getItemViewType(position: Int): Int {
@@ -67,7 +72,15 @@ class MychatAdapter(
         }
         init {
             binding.chatVideoView.setOnClickListener {
-                binding.chatVideoView.resume()
+                //binding.chatVideoView.resume()
+
+                var mediaController: MediaController
+                var isFullScreen = false
+                mediaController = MediaController(context)
+                mediaController.setAnchorView(binding.chatVideoView)
+
+
+
                 itemClickListener?.OnItemClick(items[adapterPosition], adapterPosition)
             }
 
@@ -101,6 +114,7 @@ class MychatAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        context = parent.context
         return when(viewType){
             1->{
                 MyViewHolder(MyChatItemBinding.inflate(LayoutInflater.from(parent.context),parent, false))
