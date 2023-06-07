@@ -1,9 +1,7 @@
 package com.example.alive
 
-import android.media.MediaPlayer
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -12,12 +10,15 @@ import com.example.alive.databinding.MyChatItemBinding
 import com.example.alive.databinding.MyVideoChatItemBinding
 import com.example.alive.databinding.OtherChatItemBinding
 import com.example.alive.databinding.OtherVideoChatItemBinding
-import kotlinx.coroutines.NonCancellable.start
 
 
 class MychatAdapter(
     val items:ArrayList<Message>
 ): ListAdapter<Message, RecyclerView.ViewHolder>(diffUtil) {
+
+    interface RecyclerViewClickListener {
+        fun onClick(view: View?, position: Int)
+    }
 
     override fun getItemViewType(position: Int): Int {
         return currentList[position].sender_uid
@@ -58,6 +59,16 @@ class MychatAdapter(
             binding.profileImageView.setImageResource(R.drawable.circuit)
             binding.chatVideoView.start()
         }
+
+        init {
+            binding.chatVideoView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    binding.chatVideoView.resume()
+                }
+            }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

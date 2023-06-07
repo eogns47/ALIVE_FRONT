@@ -206,7 +206,7 @@ class chatRoom : AppCompatActivity() {
             }
         }
         else{
-            Toast.makeText(this,"sibal",Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"sibal",Toast.LENGTH_SHORT).show()
         }
     }
 
