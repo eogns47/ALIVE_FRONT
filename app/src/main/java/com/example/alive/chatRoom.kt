@@ -192,6 +192,7 @@ class chatRoom : AppCompatActivity() {
                             initSendVideo(videoUri)
 
                             postVideo(videoUri)
+                            //Thread.sleep(20000)
                             getVideo()
                         } else {
                             // 동영상 파일 저장 실패
