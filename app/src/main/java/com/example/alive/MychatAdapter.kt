@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.MediaController
 import android.widget.Toast
@@ -14,6 +15,7 @@ import com.example.alive.databinding.MyChatItemBinding
 import com.example.alive.databinding.MyVideoChatItemBinding
 import com.example.alive.databinding.OtherChatItemBinding
 import com.example.alive.databinding.OtherVideoChatItemBinding
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class MychatAdapter(
@@ -26,7 +28,6 @@ class MychatAdapter(
     }
 
     var itemClickListener: OnItemClickListener?=null
-
 
 
     override fun getItemViewType(position: Int): Int {

@@ -62,7 +62,7 @@ class chatRoom : AppCompatActivity() {
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val STORAGE_PERMISSION_FLAG = 200
     private lateinit var videoCaptureLauncher: ActivityResultLauncher<Intent>
-    val latch = CountDownLatch(1)
+    //val latch = CountDownLatch(1)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,13 +197,14 @@ class chatRoom : AppCompatActivity() {
                             initSendVideo(videoUri)
 
                             postVideo(videoUri)
-                            try {
-                                //latch.await()
-                                getVideo()
-                            } catch (e: InterruptedException) {
-                                // 대기 도중 인터럽트가 발생한 경우 예외 처리
-                                Toast.makeText(this,e.message,Toast.LENGTH_SHORT).show()
-                            }
+                            getVideo()
+//                            try {
+//                                //latch.await()
+//                                getVideo()
+//                            } catch (e: InterruptedException) {
+//                                // 대기 도중 인터럽트가 발생한 경우 예외 처리
+//                                Toast.makeText(this,e.message,Toast.LENGTH_SHORT).show()
+//                            }
                         } else {
                             // 동영상 파일 저장 실패
                             // 에러 처리
@@ -233,12 +234,12 @@ class chatRoom : AppCompatActivity() {
         call.enqueue(object : Callback<UploadRes> {
             override fun onResponse(call: Call<UploadRes>, response: Response<UploadRes>) {
                 // 파일 업로드 성공
-                latch.countDown()
+                // latch.countDown()
             }
 
             override fun onFailure(call: Call<UploadRes>, t: Throwable) {
                 // 파일 업로드 실패
-                latch.countDown()
+                //latch.countDown()
                 Toast.makeText(this@chatRoom, "fail - " + t.message, Toast.LENGTH_SHORT).show()
             }
         })
@@ -251,11 +252,12 @@ class chatRoom : AppCompatActivity() {
 
             call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                // 파일 업로드 성공
-
+                // 파일 다운로드 성공
                 val responseBody = response.body()
                 var myUri: Uri? = null
+
                 if (responseBody != null) {
+                    Toast.makeText(this@chatRoom, "get success", Toast.LENGTH_SHORT).show()
                     CoroutineScope(Dispatchers.IO).launch {
                         myUri = saveVideoToFile(responseBody, "test1")
                         withContext(Dispatchers.Main) {
@@ -263,10 +265,13 @@ class chatRoom : AppCompatActivity() {
                         }
                     }
                 }
+                else {
+                    Toast.makeText(this@chatRoom, "responseBody null", Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                // 파일 업로드 실패
+                // 파일 다운로드 실패
                 Toast.makeText(this@chatRoom, "fail - " + t.message, Toast.LENGTH_SHORT).show()
             }
         })
