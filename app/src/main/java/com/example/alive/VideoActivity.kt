@@ -30,12 +30,10 @@ class VideoActivity : AppCompatActivity() {
             videoView.requestFocus()    // 준비하는 과정을 미리함
 
             videoView.setOnPreparedListener {
-                Toast.makeText(applicationContext, "동영상 재생 준비 완료", Toast.LENGTH_SHORT).show()
                 videoView.start()       // 동영상 재개
             }
 
             videoView.setOnCompletionListener {
-                Toast.makeText(applicationContext, "동영상 시청 완료", Toast.LENGTH_SHORT).show()
             }
 
             btnStart.setOnClickListener {
