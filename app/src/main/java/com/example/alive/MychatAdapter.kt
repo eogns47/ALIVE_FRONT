@@ -60,7 +60,6 @@ class MychatAdapter(
         fun bind(message: Message){
             binding.chatVideoView.stopPlayback()
 
-            binding.chatVideoView.setVideoURI(message.videopath)
 //            binding.chatVideoView.start()
             binding.timeTextView.text = message.time
 //            binding.chatVideoView.seekTo(message.videoPosition)
