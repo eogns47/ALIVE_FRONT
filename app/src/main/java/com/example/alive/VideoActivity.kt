@@ -37,11 +37,11 @@ class VideoActivity : AppCompatActivity() {
             }
 
             btnStart.setOnClickListener {
-                videoView.start()       // 동영상 재개
+                videoView.resume()       // 동영상 재개
             }
 
             btnResume.setOnClickListener {
-                videoView.resume()      // 동영상 처음부터 재시작
+                videoView.start()      // 동영상 처음부터 재시작
             }
 
             btnPause.setOnClickListener {
