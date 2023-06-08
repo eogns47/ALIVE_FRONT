@@ -58,6 +58,8 @@ class MychatAdapter(
 
     inner class MyVideoViewHolder(val binding: MyVideoChatItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(message: Message){
+            binding.chatVideoView.stopPlayback()
+
             binding.chatVideoView.setVideoURI(message.videopath)
 //            binding.chatVideoView.start()
             binding.timeTextView.text = message.time
@@ -68,6 +70,8 @@ class MychatAdapter(
 //            } else {
 //                binding.chatVideoView.pause()
 //            }
+
+
         }
         init {
             binding.chatVideoView.setOnClickListener {
