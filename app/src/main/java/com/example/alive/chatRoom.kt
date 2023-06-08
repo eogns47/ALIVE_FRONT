@@ -25,10 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.alive.databinding.ActivityChatRoomBinding
 import com.example.alive.retrofit.RetrofitClient
 import com.example.alive.retrofit.UploadRes
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -41,7 +38,6 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.concurrent.CountDownLatch
 
 
 @Suppress("DEPRECATION")
@@ -62,7 +58,6 @@ class chatRoom : AppCompatActivity() {
         android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private val STORAGE_PERMISSION_FLAG = 200
     private lateinit var videoCaptureLauncher: ActivityResultLauncher<Intent>
-    //val latch = CountDownLatch(1)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,14 +192,8 @@ class chatRoom : AppCompatActivity() {
                             initSendVideo(videoUri)
 
                             postVideo(videoUri)
+                            //Thread.sleep(20000)
                             getVideo()
-//                            try {
-//                                //latch.await()
-//                                getVideo()
-//                            } catch (e: InterruptedException) {
-//                                // 대기 도중 인터럽트가 발생한 경우 예외 처리
-//                                Toast.makeText(this,e.message,Toast.LENGTH_SHORT).show()
-//                            }
                         } else {
                             // 동영상 파일 저장 실패
                             // 에러 처리
@@ -229,23 +218,21 @@ class chatRoom : AppCompatActivity() {
         val videoPart = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
         val userService = RetrofitClient.userService
+
         val call = userService.uploadFile(videoPart)
 
         call.enqueue(object : Callback<UploadRes> {
             override fun onResponse(call: Call<UploadRes>, response: Response<UploadRes>) {
                 // 파일 업로드 성공
-                // latch.countDown()
             }
 
             override fun onFailure(call: Call<UploadRes>, t: Throwable) {
                 // 파일 업로드 실패
-                //latch.countDown()
                 Toast.makeText(this@chatRoom, "fail - " + t.message, Toast.LENGTH_SHORT).show()
             }
         })
     }
 
-    @SuppressLint("SuspiciousIndentation")
     private fun getVideo() {
         val userService = RetrofitClient.userService
         val call = userService.downloadFile()
