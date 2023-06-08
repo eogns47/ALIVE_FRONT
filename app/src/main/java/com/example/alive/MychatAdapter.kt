@@ -71,14 +71,6 @@ class MychatAdapter(
         }
         init {
             binding.chatVideoView.setOnClickListener {
-//                binding.chatVideoView.resume()
-//                binding.chatVideoView.setMediaController(MediaController(chatRoom))
-//                val layoutParams = binding.chatVideoView.layoutParams
-//                layoutParams.width = 600
-//                layoutParams.height=600
-//                binding.chatVideoView.layoutParams = layoutParams
-
-
                 itemClickListener?.OnItemClick(items[adapterPosition], adapterPosition)
             }
 
@@ -102,7 +94,12 @@ class MychatAdapter(
             binding.chatVideoView.setVideoURI(message.videopath)
             binding.timeTextView.text = message.time
             binding.profileImageView.setImageResource(R.drawable.circuit)
-            binding.chatVideoView.start()
+        }
+        init {
+            binding.chatVideoView.setOnClickListener {
+                itemClickListener?.OnItemClick(items[adapterPosition], adapterPosition)
+            }
+
         }
 
 
